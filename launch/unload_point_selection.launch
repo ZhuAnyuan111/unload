@@ -1,0 +1,118 @@
+<launch>
+
+    <arg name="rviz" default="true" /> 
+
+    <!-- Launch multi_lidar_calibration_node -->
+    <node 
+        name="multi_lidar_calibration_node" 
+        pkg="multi_lidar_calibration_pkg"
+        required="true"
+        type="multi_lidar_calibration_node"
+        output="screen"
+    >
+        <!-- Input topic -->
+        <param name="input_lidar_rs1_topic" value="/1/rslidar_points" />
+        <param name="input_lidar_rs2_topic" value="/2/rslidar_points" />
+        <param name="input_lidar_rs3_topic" value="/3/rslidar_points" />
+        <param name="input_lidar_zv1_topic" value="/ns1/zvision_lidar_points" />
+        <param name="input_lidar_zv2_topic" value="/ns2/zvision_lidar_points" />
+        <param name="input_swing_angle_topic" value="/Terminal_Real_Swing" />
+        <!-- Output topic -->
+        <param name="output_lidar_topic" value="/multi_lidar_pointcloud" />
+        <!-- Parameters -->
+        <rosparam command="load" file="$(find multi_lidar_calibration_pkg)/launch/SY870_LiDAR_Position.yaml" />
+        <!-- Debug switch -->
+        <param name="CONSOLE_DEBUG" value="false" />
+        <param name="TIMING_DEBUG" value="false" />
+        <param name="VIS_DEBUG" value="false" />
+    </node>
+
+    <!-- Launch imu_segment_excavator_node -->
+    <node 
+        name="imu_segment_excavator_node" 
+        pkg="imu_segment_excavator_pkg"
+        required="true"
+        type="imu_segment_excavator_node"
+        output="screen"
+    >
+        <!-- Input topic -->
+        <param name="input_lidar_topic" value="/multi_lidar_pointcloud" />
+        <param name="input_swing_angle_topic" value="/Terminal_Real_Swing" />
+        <param name="input_real_angle_topic" value="/Real_Angle" />
+        <!-- Output topic -->
+        <param name="output_lidar_topic" value="/pointcloud_without_excavator" />
+        <!-- Parameters -->
+        <rosparam command="load" file="$(find imu_segment_excavator_pkg)/launch/SY870_Geometry.yaml" />
+        <!-- Debug switch -->
+        <param name="CONSOLE_DEBUG" value="false" />
+        <param name="TIMING_DEBUG" value="false" />
+        <param name="VIS_DEBUG" value="false" />
+    </node>
+
+    <!-- Launch lidar_det_node -->
+    <node 
+        pkg="detection_pkg"
+        type="detection_infer.py"
+        name="lidar_det_node" 
+        required="true"
+        output="screen"
+    >
+    </node>
+
+    <!-- Launch pointcloud_filter_cropboxes_node -->
+    <node 
+        pkg="pointcloud_filter_cropboxes_pkg"
+        type="pointcloud_filter_cropboxes_node"
+        name="pointcloud_filter_cropboxes_node" 
+        required="true"
+        output="screen"
+    >
+        <!-- Input topic -->
+        <param name="input_lidar_topic" value="/pointcloud_without_excavator" />
+        <param name="input_hopper_topic" value="/hopper_center_position" />
+        <!-- Output topic -->
+        <param name="output_lidar_topic" value="/pointcloud_without_truck" />
+        <!-- Parameters -->
+        <rosparam command="load" file="$(find pointcloud_filter_cropboxes_pkg)/launch/Cropbox_Config.yaml" />
+        <!-- Debug switch -->
+        <param name="CONSOLE_DEBUG" value="false" />
+        <param name="TIMING_DEBUG" value="false" />
+        <param name="VIS_DEBUG" value="false" />
+    </node>
+
+    <!-- Launch unload_point_selection_node -->
+    <node 
+        pkg="unload_point_selection_pkg"
+        type="unload_point_selection_node"
+        name="unload_point_selection_node" 
+        required="true"
+        output="screen"
+    >
+        <!-- Input topic -->
+        <param name="input_truck_lidar_topic" value="/pointcloud_without_truck" />
+        <param name="input_hopper_topic" value="/hopper_center_position" />
+        <param name="input_unload_times_topic" value="/xxx" />
+        <!-- Output topic -->
+        <param name="output_traj_topic" value="/traj" />
+        <!-- Parameters -->
+        <rosparam command="load" file="$(find unload_point_selection_pkg)/launch/UnloadPointSelectionConfig.yaml" />
+        <rosparam command="load" file="$(find unload_point_selection_pkg)/launch/SY870_Geometry.yaml" />
+        <!-- Debug switch -->
+        <param name="CONSOLE_DEBUG" value="true" />
+        <param name="TIMING_DEBUG" value="true" />
+        <param name="VIS_DEBUG" value="true" />
+    </node>
+
+
+    <group if="$(arg rviz)">
+        <node 
+            launch-prefix="nice" 
+            pkg="rviz" 
+            required="false"
+            type="rviz" 
+            name="rviz" 
+            args="-d $(find unload_point_selection_pkg)/rviz/debug.rviz" 
+        />
+    </group>
+    <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find unload_point_selection_pkg)/rviz/vis.rviz" /> -->
+</launch>

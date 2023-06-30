@@ -1,0 +1,18 @@
+full_height_bias: -0.2
+num_candidate_points: 21
+endpoint_to_truckhead: -1.5
+bucket_angle: 25.0
+unload_point_height_bias: 1.5
+first_point_num: 3.0
+select_soil_radius: 1.0
+num_soil_point: 20
+bias_x: 0.18
+bias_z: 1.048
+length_boom: 7.0
+length_arm: 2.59965
+length_bucket: 2.088
+P3_boomBias: 1.0
+bucket_attitude_angle: -45.0
+boom_limit: [-45.44, 55.28]
+arm_limit: [-138.69, -37.35]
+bucket_limit: [-133.48, 30.53]

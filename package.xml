@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>unload_point_selection_pkg</name>
+  <version>0.5.0</version>
+  <description>The unload_point_selection_pkg package</description>
+
+  <license>GPL</license>
+  <maintainer email="gbsxx86@gmail.com">Boshun Gao</maintainer>
+  <maintainer email="gbsxx86@qq.com">Boshun Gao</maintainer>
+  <maintainer email="1484983393@qq.com">Anyuan Zhu</maintainer>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>pcl_ros</build_depend>
+  <exec_depend>pcl_ros</exec_depend>
+
+  <build_depend>pcl_conversions</build_depend>
+  <exec_depend>pcl_conversions</exec_depend>
+
+  <build_depend>message_runtime</build_depend>
+  <exec_depend>message_runtime</exec_depend>
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>
+

@@ -1,0 +1,10 @@
+# Boom Root Point
+PointC: [0, 0, 0]
+# Point F Under PointC
+PointF: [6.00496, 0, 3.601372]
+# PointQ under PointF
+PointQ_F: [1.267355, 0, -2.268305]
+# PointV under PointQ
+PointV_Q: [0.0412, 0, -2.0836]
+
+Carriage_to_Boom_Offset: [0.18, 0, 1.048]
